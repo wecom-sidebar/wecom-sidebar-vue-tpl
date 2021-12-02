@@ -7,6 +7,8 @@ import { invokeResMock, mockUserId, wxResMock } from '@/mock'
 import config from '@/_config'
 import { fetchSignatures, fetchUserId } from '@/api'
 
+import 'ant-design-vue/dist/antd.css'
+
 Vue.config.productionTip = false
 
 export const jsSdk = createJsSdk(wxResMock, invokeResMock)
