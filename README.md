@@ -99,4 +99,4 @@ npm run start
 
 * 侧边栏的 React 开发模板可以看 [wecom-sidebar-react-tpl](https://github.com/wecom-sidebar/wecom-sidebar-react-tpl)
 * 侧边栏的 Node 端开发模板（Express）可以看 [wecom-sidebar-express-tpl](https://github.com/wecom-sidebar/wecom-sidebar-express-tpl)
-* 侧边栏的微前端开发模式（Qiankun）可以看 [weccom-sidebar-qiankun-tpl](https://github.com/wecom-sidebar/wecom-sidebar-qiankun-tpl)
+* 侧边栏的微前端开发模板（Qiankun）可以看 [weccom-sidebar-qiankun-tpl](https://github.com/wecom-sidebar/wecom-sidebar-qiankun-tpl)
