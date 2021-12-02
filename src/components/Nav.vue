@@ -7,7 +7,17 @@
     </a-menu-item>
     <a-menu-item key="Actions">
       <router-link to="/actions">
-        <a-icon type="appstore" />操作
+        <a-icon type="setting" />操作
+      </router-link>
+    </a-menu-item>
+    <a-menu-item key="人">
+      <router-link to="/external-user">
+        <a-icon type="user" />人
+      </router-link>
+    </a-menu-item>
+    <a-menu-item key="群">
+      <router-link to="/external-chat">
+        <a-icon type="usergroup-add" />群
       </router-link>
     </a-menu-item>
   </a-menu>
