@@ -14,26 +14,20 @@
 </template>
 
 <script lang="ts">
-import { Menu, Icon } from 'ant-design-vue'
-import Vue from 'vue'
+import { Component, Vue } from 'vue-property-decorator'
+import { Icon, Menu } from 'ant-design-vue'
 
-interface State {
-  current: string[];
-}
-
-export default Vue.extend({
+@Component({
   name: 'Nav',
-  data (): State {
-    return {
-      current: [this.$route.name as string]
-    }
-  },
   components: {
     'a-menu': Menu,
     'a-menu-item': Menu.Item,
     'a-icon': Icon
   }
 })
+export default class Nav extends Vue {
+  current: string[] = [this.$route.name as string]
+}
 </script>
 
 <style scoped>
