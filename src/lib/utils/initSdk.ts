@@ -1,5 +1,6 @@
 import apis from '../jsSdk/apis'
 import { JsSDK } from '@/lib/jsSdk'
+import { TicketRes } from '@/api/types'
 
 export interface Config {
   corpId: string;

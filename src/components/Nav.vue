@@ -2,7 +2,7 @@
   <a-menu v-model="current" mode="horizontal">
     <a-menu-item key="Home">
       <router-link to="/">
-        <a-icon type="mail" />首页
+        <a-icon type="home" />首页
       </router-link>
     </a-menu-item>
     <a-menu-item key="About">
