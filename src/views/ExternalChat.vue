@@ -30,7 +30,7 @@ import { fetchExternalChat } from '@/api'
 export default class ExternalChat extends Vue {
   externalChat: ExternalChatResponse['group_chat'] | null = null;
 
-  openUserProfile (userId: string, type: 1 | 2) {
+  async openUserProfile (userId: string, type: 1 | 2) {
     return jsSdk.invoke('openUserProfile', {
       userid: userId,
       type

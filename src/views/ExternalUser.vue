@@ -6,7 +6,7 @@
       <p>ID: {{ externalUser.external_userid }}</p>
       <p>姓名: {{ externalUser.name }}@{{ externalUser.corp_name }}</p>
       <p>姓别: {{ genderMap[externalUser.gender] }}</p>
-      <a-button type="primary" size="small" onClick={openUserProfile}>
+      <a-button type="primary" size="small" @click="openUserProfile">
         查看详情
       </a-button>
     </div>
@@ -17,7 +17,9 @@
 <script lang="ts">
 import { ExternalUserResponse } from '@/api/types'
 import { Component, Vue } from 'vue-property-decorator'
-import { Button } from 'ant-design-vue'
+import { Button, message } from 'ant-design-vue'
+import { jsSdk } from '@/main'
+import { fetchExternalUser } from '@/api'
 
 @Component({
   name: 'ExternalUser',
@@ -28,6 +30,31 @@ import { Button } from 'ant-design-vue'
 export default class ExternalUser extends Vue {
   externalUser: ExternalUserResponse['external_contact'] | null = null
   genderMap = ['未定义', '男', '女']
+
+  async getExternalUserInfo () {
+    const res = await jsSdk.invoke<{ userId?: string }>('getCurExternalContact', {})
+
+    if (!res || !res.userId) return
+
+    console.log('外部联系人 ID', res.userId)
+
+    this.externalUser = await fetchExternalUser(res.userId)
+  }
+
+  async openUserProfile () {
+    if (!this.externalUser) {
+      return message.warn('找不到外部联系人')
+    }
+
+    return jsSdk.invoke('openUserProfile', {
+      userid: this.externalUser.external_userid,
+      type: this.externalUser.type
+    })
+  }
+
+  async mounted () {
+    await this.getExternalUserInfo()
+  }
 }
 </script>
 

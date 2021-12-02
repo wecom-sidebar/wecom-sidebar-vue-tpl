@@ -4,7 +4,7 @@ export const mockUserId = window.mockUserId || 'YanHaiXiang'
 // 可在这里自由 mock wx.invoke 的内容
 export const invokeResMock: Record<string, any> = window.invokeResMock || {
   getCurExternalContact: {
-    userId: 'wmuUG7CQAAOrCCMkA8cqcCm1wJrJAD6A'
+    userId: 'wouUG7CQAADUoVZJzqDMgv_pfX8hm7WQ'
   }
 }
 
