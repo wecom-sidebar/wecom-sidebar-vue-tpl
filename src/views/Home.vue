@@ -1,6 +1,7 @@
 <template>
   <div class="home">
-    <h1 v-if="user">欢迎回来，{{ user.name }}</h1>
+    <h1>Vue App</h1>
+    <h2 v-if="user">欢迎回来，{{ user.name }}</h2>
   </div>
 </template>
 
