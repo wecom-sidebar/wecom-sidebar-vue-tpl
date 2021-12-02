@@ -5,9 +5,9 @@
         <a-icon type="home" />首页
       </router-link>
     </a-menu-item>
-    <a-menu-item key="About">
-      <router-link to="/about">
-        <a-icon type="appstore" />关于
+    <a-menu-item key="Actions">
+      <router-link to="/actions">
+        <a-icon type="appstore" />操作
       </router-link>
     </a-menu-item>
   </a-menu>
