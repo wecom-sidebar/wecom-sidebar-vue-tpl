@@ -68,21 +68,21 @@ Whistle 的 `Rules` 可以写成：
 
 ```js
 // Mock 当前用户 Id
-window.mockUserId = 'xxx'
+window.mockUserId = 'xxx';
 
 // 可在这里自由 mock wx.invoke 的内容
 window.invokeResMock = {
   'getCurExternalContact': {
     userId: 'xxxxx'
   },
-}
+};
 
 // 可在这里自由 wx.fn 的内容
 window.wxResMock = {
   'agentConfig': () => {
     console.log('mock agent config')
   },
-}
+};
 ```
 
 这里对应的 Mock 关系 Mapper 有 `wxResMock` 和 `invokeResMock` 分别对 `wx.fn` 和 `wx.invoke('api', callback')` 两种调用方式进行 Mock。
