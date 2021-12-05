@@ -66,6 +66,8 @@ Whistle 的 `Rules` 可以写成：
 
 然后在 Whistle 页面的 `Values` (输入 http://127.0.0.1:8899/#values 可见) 中会自动生成一个 `mock.js`，再在里面添加如下代码：
 
+**注意，下面代码必须要加分号，因为下面代码直接插入到 Webpack 打包出来的代码，所以不加分号可能出错。**
+
 ```js
 // Mock 当前用户 Id
 window.mockUserId = 'xxx';
