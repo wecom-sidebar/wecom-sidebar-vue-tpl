@@ -1,34 +1,66 @@
 declare namespace wx {
-  // 所有 wx.invoke 的 api 名
-  type Api =
-    | 'getOpenData'
-    | 'getContext'
-    | 'onMenuShareAppMessage'
-    | 'sendChatMessage'
-    | 'onMenuShareWechat'
-    | 'onMenuShareTimeline'
-    | 'startRecord'
+  type EventApi =
+    | 'onLocationChange'
+    | 'onHistoryBack'
+    | 'onGetWifiList'
+    | 'onWifiConnected'
+    | 'onBluetoothDeviceFound'
+    | 'onBeaconUpdate'
+    | 'onBeaconServiceChange'
+    | 'onNetworkStatusChange'
+    | 'onBluetoothAdapterStateChange'
+    | 'onBLEConnectionStateChange'
+    | 'onBLECharacteristicValueChange'
+    | 'onUserCaptureScreen'
+
+  // 需要异步操作逻辑的 wx.fn
+  type AsyncCallApi =
+    | 'checkJsApi'
     | 'stopRecord'
-    | 'onVoiceRecordEnd'
-    | 'playVoice'
-    | 'pauseVoice'
-    | 'stopVoice'
-    | 'onVoicePlayEnd'
     | 'uploadVoice'
     | 'downloadVoice'
+    | 'translateVoice'
     | 'chooseImage'
-    | 'previewImage'
     | 'uploadImage'
     | 'downloadImage'
     | 'getLocalImgData'
-    | 'getNetworkType'
-    | 'onNetworkStatusChange'
-    | 'openLocation'
     | 'getLocation'
-    | 'startAutoLBS'
-    | 'stopAutoLBS'
-    | 'onLocationChange'
-    | 'onHistoryBack'
+    | 'scanQRCode'
+    | 'openEnterpriseChat'
+    | 'startWifi'
+    | 'stopWifi'
+    | 'connectWifi'
+    | 'getWifiList'
+    | 'getConnectedWifi'
+    | 'setClipboardData'
+    | 'openBluetoothAdapter'
+    | 'closeBluetoothAdapter'
+    | 'getBluetoothAdapterState'
+    | 'startBluetoothDevicesDiscovery'
+    | 'stopBluetoothDevicesDiscovery'
+    | 'getBluetoothDevices'
+    | 'getConnectedBluetoothDevices'
+    | 'createBLEConnection'
+    | 'closeBLEConnection'
+    | 'getBLEDeviceServices'
+    | 'getBLEDeviceCharacteristics'
+    | 'readBLECharacteristicValue'
+    | 'writeBLECharacteristicValue'
+    | 'notifyBLECharacteristicValueChange'
+    | 'startBeaconDiscovery'
+    | 'stopBeaconDiscovery'
+    | 'agentConfig'
+    | 'config'
+
+  // 所有同步 wx.fn 的 api
+  type SyncCallApi =
+    | 'startRecord'
+    | 'playVoice'
+    | 'pauseVoice'
+    | 'stopVoice'
+    | 'previewImage'
+    | 'getNetworkType'
+    | 'openLocation'
     | 'hideOptionMenu'
     | 'showOptionMenu'
     | 'hideMenuItems'
@@ -36,32 +68,50 @@ declare namespace wx {
     | 'hideAllNonBaseMenuItem'
     | 'showAllNonBaseMenuItem'
     | 'closeWindow'
+    | 'previewFile'
+    | 'onVoiceRecordEnd'
+    | 'onVoicePlayEnd'
+    | 'onMenuShareAppMessage'
+    | 'onMenuShareWechat'
+    | 'onMenuShareTimeline'
+
+  // 所有 wx.invoke 的 api 名
+  type InvokeApi =
+    | 'getContext'
+    | 'sendChatMessage'
+    | 'startAutoLBS'
+    | 'stopAutoLBS'
     | 'openDefaultBrowser'
-    | 'scanQRCode'
     | 'selectEnterpriseContact'
-    | 'openEnterpriseChat'
     | 'chooseInvoice'
     | 'selectExternalContact'
     | 'getCurExternalContact'
     | 'openUserProfile'
     | 'shareAppMessage'
     | 'shareWechatMessage'
-    | 'startWifi'
-    | 'stopWifi'
-    | 'connectWifi'
-    | 'getWifiList'
-    | 'onGetWifiList'
-    | 'onWifiConnected'
-    | 'getConnectedWifi'
-    | 'setClipboardData'
-    | 'wwapp.getOpenData'
-    | 'wwapp.initWwOpenData'
     | 'getCurExternalChat'
     | 'createSchoolPayment'
     | 'startMeeting'
     | 'startLiving'
     | 'replayLiving'
     | 'downloadLivingReplay'
+    | 'selectCorpGroupContact'
+    | 'claimClassAdmin'
+    | 'updateEnterpriseChat'
+    | 'openExistedChatWithMsg'
+    | 'hideChatAttachmentMenu'
+    | 'setShareAttr'
+    | 'getShareInfo'
+    | 'createCorpGroupChat'
+    | 'updateCorpGroupChat'
+    | 'shareToExternalContact'
+    | 'shareToExternalChat'
+    | 'navigateToAddCustomer'
+    | 'shareToExternalMoments'
+    | 'updateMomentsSetting'
+    | 'openThirdAppServiceChat'
+
+  type Api = AsyncCallApi | SyncCallApi | InvokeApi | EventApi;
 
   /**
    * 所有企业微信 SDK 的回调返回类型
@@ -334,6 +384,12 @@ declare namespace wx {
       localIds: string[]
     }>
   })
+
+  type NetworkType = 'wifi' | '2g' | '3g' | '4g' | 'none' | 'unknown';
+
+  declare function onNetworkStatusChange(
+    callback: (params: {isConnected: boolean; networkType: NetworkType}) => void
+  )
 
   // 预览图片接口
   declare function previewImage(params: {
@@ -669,7 +725,7 @@ declare namespace wx {
   declare function getNetworkType(params: WxFnCommonParams & {
     success?: WxFnCallback<{
       isConnected: boolean; // 当前是否有网络连接
-      networkType: 'wifi' | '2g' | '3g' | '4g' | 'none' | 'unknown'
+      networkType: NetworkType
     }>
   })
 
@@ -712,7 +768,7 @@ declare namespace wx {
 
   // 获取进入H5页面的入口环境
   // 详见：https://open.work.weixin.qq.com/api/doc/90001/90144/94326
-  declare function invoke(api: 'getContext', {}, callback: WxInvokeCallback<{
+  declare function invoke(api: 'getContext', params: {}, callback: WxInvokeCallback<{
     entry: 'normal' | 'contact_profile' | 'single_chat_tools' | 'group_chat_tools' | 'chat_attachment'; // 返回进入H5页面的入口类型
     shareTicket: string; // 可用于调用getShareInfo接口
   }>);

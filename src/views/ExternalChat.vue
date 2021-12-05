@@ -38,13 +38,17 @@ export default class ExternalChat extends Vue {
   }
 
   async getExternalChatInfo () {
-    const res = await jsSdk.invoke<{chatId?: string}>('getCurExternalChat', {})
+    try {
+      const res = await jsSdk.invoke<{chatId?: string}>('getCurExternalChat', {})
 
-    if (!res || !res.chatId) return
+      if (!res || !res.chatId) return
 
-    console.log('外部联系群 ID', res.chatId)
+      console.log('外部联系群 ID', res.chatId)
 
-    this.externalChat = await fetchExternalChat(res.chatId || '')
+      this.externalChat = await fetchExternalChat(res.chatId || '')
+    } catch (e) {
+      console.error(e)
+    }
   }
 
   async mounted () {

@@ -32,13 +32,17 @@ export default class ExternalUser extends Vue {
   genderMap = ['未定义', '男', '女']
 
   async getExternalUserInfo () {
-    const res = await jsSdk.invoke<{ userId?: string }>('getCurExternalContact', {})
+    try {
+      const res = await jsSdk.invoke<{ userId?: string }>('getCurExternalContact', {})
 
-    if (!res || !res.userId) return
+      if (!res || !res.userId) return
 
-    console.log('外部联系人 ID', res.userId)
+      console.log('外部联系人 ID', res.userId)
 
-    this.externalUser = await fetchExternalUser(res.userId)
+      this.externalUser = await fetchExternalUser(res.userId)
+    } catch (e) {
+      console.error(e)
+    }
   }
 
   async openUserProfile () {

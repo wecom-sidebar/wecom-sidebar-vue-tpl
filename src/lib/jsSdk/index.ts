@@ -1,4 +1,17 @@
 import compareVersions from 'compare-versions'
+import WxFnCallbackRes = wx.WxFnCallbackRes;
+
+const isDev = process.env.NODE_ENV === 'development'
+const warnLog = (...args: any) => {
+  if (isDev) {
+    console.warn(...args)
+  }
+}
+const infoLog = (...args: any) => {
+  if (isDev) {
+    console.info(...args)
+  }
+}
 
 /**
  * jssdk 的 config 函数的封装
@@ -8,20 +21,6 @@ const config = (setting: wx.ConfigParams): Promise<wx.WxFnCallbackRes | null> =>
   return new Promise((resolve) => {
     wx.config({ ...setting })
     wx.ready(() => resolve(null))
-  })
-}
-
-/**
- * jssdk 的 agentConfig 函数封装
- * @param agentSetting
- */
-const agentConfig = (agentSetting: Omit<wx.AgentConfigParams, 'success' | 'fail'>): Promise<wx.WxFnCallbackRes> => {
-  return new Promise((resolve, reject) => {
-    wx.agentConfig({
-      ...agentSetting,
-      success: resolve,
-      fail: reject
-    })
   })
 }
 
@@ -49,26 +48,78 @@ const checkDeprecated = async (): Promise<boolean> => {
  * @param apiName api 名称
  * @param params 传入参数
  */
-const invoke = <Res = { hasError: boolean }>(apiName: wx.Api, params = {}) => {
-  return new Promise<wx.WxInvokeCallbackRes & Res>((resolve) => {
-    wx.invoke<Res>(apiName, params, res => {
-      const hasError = res.err_msg !== `${apiName}:ok`
+const invoke = <Res = {}>(apiName: wx.InvokeApi, params = {}) => {
+  infoLog(`调用 wx.invoke('${apiName}')，入参`, params)
+  return new Promise<wx.WxInvokeCallbackRes & Res>((resolve, reject) => {
+    const copiedParams = JSON.parse(JSON.stringify(params))
+    wx.invoke<Res>(apiName, copiedParams, res => {
+      const hasError = res.err_msg !== `${apiName}:ok` && res.err_msg !== `${apiName}:cancel`
 
       if (hasError) {
-        // 错误日志
-        console.error(apiName, params, res)
+        warnLog(`调用 wx.invoke('${apiName}') 出错，入参：`, copiedParams)
+        warnLog(`调用 wx.invoke('${apiName}') 出错，返回值：`, res)
       }
 
-      resolve({ ...res, hasError })
+      return hasError ? reject(new Error(res.err_msg)) : resolve(res)
     })
   })
+}
+
+/**
+ * wx.fn 的异步调用方法
+ * @param apiName wx.fn 的 fn 名
+ * @param params 参数
+ */
+const asyncCall = (apiName: wx.AsyncCallApi, params: any = {}) => {
+  infoLog(`调用 wx.${apiName}，入参`, params)
+  return new Promise((resolve, reject) => {
+    const callParams = {
+      ...params,
+      complete: resolve,
+      success: resolve,
+      trigger: resolve,
+      cancel: resolve,
+      fail: (error: WxFnCallbackRes) => {
+        warnLog(`调用 wx.${apiName} 出错，入参：`, params)
+        warnLog(`调用 wx.${apiName} 出错，返回值：`, error.errMsg)
+        reject(new Error(error.errMsg))
+      }
+    }
+
+    wx[apiName](callParams)
+  })
+}
+
+/**
+ * wx.fn 的同步调用方法
+ * @param apiName wx.fn 的 fn 名
+ * @param params 参数
+ */
+const call = (apiName: wx.SyncCallApi, params: any = {}) => {
+  infoLog(`调用 wx.${apiName}，入参`, params)
+  return wx[apiName](params)
+}
+
+/**
+ * wx.onXXX 的调用方法，用于监听事件
+ * 注意：
+ * 对于 onVoiceRecordEnd, onVoicePlayEnd, onMenuShareAppMessage, onMenuShareWechat, onMenuShareTimeline 调用，
+ * 请使用 jsSdk.call 来添加监听事件，因为这两个 Api 的调用方式和别的 wx.onXXX 完全不一样，且功能也不一样，只用于 complete。
+ * @param eventName wx.fn 的事件名，直接写 onXXX 即可
+ * @param callback 回调函数
+ */
+const listen = (eventName: wx.EventApi, callback: any) => {
+  infoLog(`监听 wx.${eventName}`)
+  return wx[eventName](callback)
 }
 
 const _jsSdk = {
   checkDeprecated,
   config,
-  agentConfig,
-  invoke
+  invoke,
+  asyncCall,
+  call,
+  listen
 }
 
 export type JsSDK = typeof _jsSdk;
