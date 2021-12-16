@@ -1,4 +1,5 @@
 import Vue, { VNode } from 'vue'
+import { InvokeResMock, WxResMock } from 'wecom-sidebar-jssdk'
 
 declare global {
   namespace JSX {
@@ -16,8 +17,8 @@ declare global {
     // mock userId
     _mockUserId: string,
     // wx.invoke 里的 Mock 关系表，apiName -> result
-    _invokeResMock?: Partial<JsSDK>;
+    _invokeResMock?: InvokeResMock;
     // 企业微信的 JsSdk 的 Mock 关系表，fnName -> result
-    _wxResMock?: Partial<JsSDK>;
+    _wxResMock?: WxResMock;
   }
 }
