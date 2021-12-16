@@ -11,9 +11,9 @@
 </template>
 
 <script lang="ts">
-import { Button, Input } from 'ant-design-vue'
+import { Button, Input, message } from 'ant-design-vue'
 import { Component, Vue } from 'vue-property-decorator'
-import { jsSdk } from '@/main'
+import { invoke } from 'wecom-sidebar-jssdk'
 
 @Component({
   name: 'Actions',
@@ -29,12 +29,17 @@ export default class Actions extends Vue {
   async sendMsg () {
     if (!this.msg) alert('消息不能为空')
 
-    await jsSdk.invoke('sendChatMessage', {
-      msgtype: 'text',
-      text: {
-        content: this.msg
-      }
-    })
+    try {
+      await invoke('sendChatMessage', {
+        msgtype: 'text',
+        enterChat: true,
+        text: {
+          content: this.msg
+        }
+      })
+    } catch (e) {
+      message.error(e.message)
+    }
   }
 }
 </script>

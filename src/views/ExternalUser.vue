@@ -18,8 +18,8 @@
 import { ExternalUserResponse } from '@/api/types'
 import { Component, Vue } from 'vue-property-decorator'
 import { Button, message } from 'ant-design-vue'
-import { jsSdk } from '@/main'
 import { fetchExternalUser } from '@/api'
+import { invoke } from 'wecom-sidebar-jssdk'
 
 @Component({
   name: 'ExternalUser',
@@ -33,7 +33,7 @@ export default class ExternalUser extends Vue {
 
   async getExternalUserInfo () {
     try {
-      const res = await jsSdk.invoke<{ userId?: string }>('getCurExternalContact', {})
+      const res = await invoke('getCurExternalContact', {})
 
       if (!res || !res.userId) return
 
@@ -41,7 +41,7 @@ export default class ExternalUser extends Vue {
 
       this.externalUser = await fetchExternalUser(res.userId)
     } catch (e) {
-      console.error(e)
+      message.error(e.message)
     }
   }
 
@@ -50,10 +50,14 @@ export default class ExternalUser extends Vue {
       return message.warn('找不到外部联系人')
     }
 
-    return jsSdk.invoke('openUserProfile', {
-      userid: this.externalUser.external_userid,
-      type: this.externalUser.type
-    })
+    try {
+      await invoke('openUserProfile', {
+        userid: this.externalUser.external_userid,
+        type: this.externalUser.type
+      })
+    } catch (e) {
+      message.error(e.message)
+    }
   }
 
   async mounted () {

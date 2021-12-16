@@ -2,19 +2,20 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
-import { checkRedirect, createJsSdk, initSdk } from '@/lib'
-import { invokeResMock, mockUserId, wxResMock } from '@/mock'
-import config from '@/_config'
+import { checkRedirect, initSdk } from 'wecom-sidebar-jssdk'
+import config from '@/config'
 import { fetchSignatures, fetchUserId } from '@/api'
 
 import 'ant-design-vue/dist/antd.css'
+import { mockSdk } from '@/mock'
+
+// 自动 Mock
+mockSdk()
 
 Vue.config.productionTip = false
 
-export const jsSdk = createJsSdk(wxResMock, invokeResMock)
-
-checkRedirect(config, fetchUserId, mockUserId) // 重定向获取 code（用户身份）
-  .then(() => initSdk(jsSdk, config, fetchSignatures)) // 初始化 JsSdk
+checkRedirect(config, fetchUserId) // 重定向获取 code（用户身份）
+  .then(() => initSdk(config, fetchSignatures)) // 初始化 JsSdk
   .then(() => {
     new Vue({
       router,
